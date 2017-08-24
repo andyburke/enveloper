@@ -47,7 +47,7 @@ Add this to your envelope.json:
 }
 ```
 
-Get the secrets back out (assuming NODE_ENV is 'dev' and we put our secrets into other environment variables):
+Get the secrets back out (assuming NODE_ENV is 'dev' and we put our secrets into environment variables):
 
 ```javascript
 const enveloper = require( 'enveloper' );
