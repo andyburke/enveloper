@@ -11,6 +11,62 @@ enveloper is a small, simple utility to encrypt secrets.
 npm install enveloper
 ```
 
+# Example
+
+Encrypt a value using a secret key:
+
+```
+> enveloper encrypt "this is a secret" --key "this is the secret key"
+aes-256-gcm::sha256::base64::DYMNOOor7pRJduKneKn9dw==::MDZZYhhep3HSN9lkIXh+HQ==::l9KDBsxf6apQK501wADJgQ==
+```
+
+Save this into an envelope.json in your project:
+
+```json
+{
+    "my_test_secret": "aes-256-gcm::sha256::base64::DYMNOOor7pRJduKneKn9dw==::MDZZYhhep3HSN9lkIXh+HQ==::l9KDBsxf6apQK501wADJgQ=="
+}
+```
+
+Encrypt another secret:
+
+```
+> enveloper encrypt "this is a secret for the dev environment" --key "this is the secret key for dev"
+aes-256-gcm::sha256::base64::dIXProAFONjMle5n/CaIbw==::Kv+0ad4pbGVcJyII0FgZstT/k1nQqI9n+/rhgahr7ht/LSKWIuhcrw==::Vu0QVhlZFlSa3MKTW0ZeXA==
+```
+
+Add this to your envelope.json:
+
+```json
+{
+    "my_test_secret": "aes-256-gcm::sha256::base64::DYMNOOor7pRJduKneKn9dw==::MDZZYhhep3HSN9lkIXh+HQ==::l9KDBsxf6apQK501wADJgQ==",
+
+    "dev": {
+        "environment_secret": "aes-256-gcm::sha256::base64::dIXProAFONjMle5n/CaIbw==::Kv+0ad4pbGVcJyII0FgZstT/k1nQqI9n+/rhgahr7ht/LSKWIuhcrw==::Vu0QVhlZFlSa3MKTW0ZeXA=="
+    }
+}
+```
+
+Get the secrets back out (assuming NODE_ENV is 'dev' and we put our secrets into other environment variables):
+
+```javascript
+const enveloper = require( 'enveloper' );
+
+const secrets = await enveloper.get_secrets( [ {
+    name: 'my_test_secret',
+    key: process.env.TEST_SECRET_KEY
+}, {
+    name: 'environment_secret',
+    key: process.env.ENVIRONMENT_SECRET_KEY
+} ] );
+
+// secrets:
+// {
+//     "my_test_secret": "this is a test secret",
+//     "environment_secret": "this is an environment secret"
+// }
+```
+
 # API
 
 ## seal( secret[, options ] )
