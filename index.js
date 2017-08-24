@@ -1,6 +1,8 @@
 'use strict';
 
 const crypto = require( 'crypto' );
+const util = require( 'util' );
+const find_in_tree = util.promisify( require( 'walk-up' ) );
 
 const DEFAULTS = {
     ALGORITHM: 'aes-256-gcm',
@@ -97,5 +99,46 @@ module.exports = {
         delete encrypted_info.encoding_fields;
 
         return encrypted_info;
+    },
+
+    get_secrets: async function( secrets, _options ) {
+        const options = Object.assign( {
+            filename: 'envelope.json',
+            directory: __dirname
+        }, _options );
+
+        let envelope_path = options.path;
+
+        if ( !envelope_path ) {
+            const envelope_search_result = await find_in_tree( options.directory, options.filename );
+
+            if ( !envelope_search_result || !envelope_search_result.found ) {
+                throw new Error( `Could not locate an envelope.` );
+            }
+
+            const path = require( 'path' );
+            envelope_path = path.join( envelope_search_result.path, options.filename );
+        }
+
+        const envelope = require( envelope_path );
+        const environment = process.env.NODE_ENV;
+
+        const result = {};
+        secrets.forEach( secret => {
+            const secret_string = ( environment && envelope[ environment ] && envelope[ environment ][ secret.name ] ) || envelope[ secret.name ];
+
+            if ( !secret_string ) {
+                throw new Error( `Could not locate secret: ${ secret_name } in ${ envelope_path }` );
+            }
+
+            const encrypted_secret = module.exports.from_string( secret_string );
+            const decrypted_secret = module.exports.open( Object.assign( {
+                key: secret.key
+            }, encrypted_secret ) );
+
+            result[ secret.name ] = decrypted_secret.decrypted;
+        } );
+
+        return result;
     }
 };

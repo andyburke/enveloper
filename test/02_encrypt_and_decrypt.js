@@ -6,7 +6,7 @@ const enveloper = require( '../index.js' );
 
 const SECRET = 'this is a test';
 
-test( 'encrypt with auto-generated key', t => {
+test( 'encrypt/decrypt with auto-generated key', t => {
     const encryption_result = enveloper.seal( SECRET );
 
     t.ok( encryption_result, 'got encryption result' );
@@ -22,7 +22,7 @@ test( 'encrypt with auto-generated key', t => {
     t.end();
 } );
 
-test( 'encrypt with user-specified key', t => {
+test( 'encrypt/decrypt with user-specified key', t => {
     const TEST_KEY = 'this is the test key';
 
     const encryption_result = enveloper.seal( SECRET, {
