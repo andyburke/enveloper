@@ -1,3 +1,5 @@
+#!/usr/bin/node
+
 'use strict';
 
 const program = require( 'commander' );
