@@ -93,6 +93,9 @@ module.exports = {
             encrypted_info[ field ] = values[ index ];
         } );
 
+        delete encrypted_info.separator;
+        delete encrypted_info.encoding_fields;
+
         return encrypted_info;
     }
 };
