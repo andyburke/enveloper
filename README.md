@@ -69,6 +69,70 @@ const secrets = await enveloper.get_secrets( [ {
 
 # API
 
+## get_secrets( secrets[, options ] )
+
+gets the given secrets from a file within the directory tree
+
+### example
+
+```javascript
+const enveloper = require( 'enveloper' );
+
+const secrets = await enveloper.get_secrets( [ {
+    name: 'test',
+    key: 'this is the key for the test secret'
+}, {
+    name: 'other',
+    key: 'this is the key for the other secret'
+} ] );
+
+// secrets:
+// {
+//     "test": "this is the test secret",
+//     "other": "this is the other secret"
+// }
+```
+
+### envelope.json
+
+By default, get_secrets will search up the directory tree for an envelope.json
+
+The envelope.json file should contain string-based enveloper secrets, which can
+optionally be put into environments, eg:
+
+```json
+{
+    "dev": {
+        "test": "aes-256-gcm::sha256::base64::ugsXgVN/3Gag0xI5wVvHjA==::tMsv2lCHhbFhD4NVUJ25Sm+muloURpdJfbM8a47LTQdP::nTY7C5a0u/4BmJwh3XXv0Q=="
+    },
+
+    "qa": {
+        "test": "aes-256-gcm::sha256::base64::C86/3u+gQ4cyDAsK0qsG3g==::jb3Q5qNde6k1ATeP1+q7ly7/fspu/HHRODoLEryPn+k=::tQ86omDo71EyWRoD00UNmg=="
+    },
+
+    "prod": {
+        "test": "aes-256-gcm::sha256::base64::1pCv3GoJQ2ZxiHYSKL77/Q==::KnnAxnjFFVJJf4sYij57Ak+S2SB2MC7FUJ64OjhL0wwgaw==::UOTl35IeueVRVpsBiZrUkQ=="
+    },
+
+    "shared_across_environments": "aes-256-gcm::sha256::base64::VYZleBk6O808v5ucdDh2Dg==::QhhHWfdYJNKU79a8LSASvqhsq305Cs8YiAQ=::FLTn1KA51UARf+Pj4CoYuQ=="
+}
+```
+
+You can override the filename or the starting directory, eg:
+
+```javascript
+const secrets = await enveloper.get_secrets( [ {
+    name: 'test',
+    key: 'this is the key for the test secret'
+}, {
+    name: 'other',
+    key: 'this is the key for the other secret'
+} ], {
+    filename: 'my_envelope.json',
+    directory: '/some/starting/directory'
+} );
+```
+
 ## seal( secret[, options ] )
 
 'seals' (encrypts) the given secret.
@@ -188,69 +252,6 @@ const sealed_from_string = enveloper.from_string( str );
 //     encrypted: 'k6Dp',
 //     tag: '4ibYKY3u0CzgSeXkRmipuQ=='
 // }
-```
-## get_secrets( secrets[, options ] )
-
-gets the given secrets from a file within the directory tree
-
-### example
-
-```javascript
-const enveloper = require( 'enveloper' );
-
-const secrets = await enveloper.get_secrets( [ {
-    name: 'test',
-    key: 'this is the key for the test secret'
-}, {
-    name: 'other',
-    key: 'this is the key for the other secret'
-} ] );
-
-// secrets:
-// {
-//     "test": "this is the test secret",
-//     "other": "this is the other secret"
-// }
-```
-
-### envelope.json
-
-By default, get_secrets will search up the directory tree for an envelope.json
-
-The envelope.json file should contain string-based enveloper secrets, which can
-optionally be put into environments, eg:
-
-```json
-{
-    "dev": {
-        "test": "aes-256-gcm::sha256::base64::ugsXgVN/3Gag0xI5wVvHjA==::tMsv2lCHhbFhD4NVUJ25Sm+muloURpdJfbM8a47LTQdP::nTY7C5a0u/4BmJwh3XXv0Q=="
-    },
-
-    "qa": {
-        "test": "aes-256-gcm::sha256::base64::C86/3u+gQ4cyDAsK0qsG3g==::jb3Q5qNde6k1ATeP1+q7ly7/fspu/HHRODoLEryPn+k=::tQ86omDo71EyWRoD00UNmg=="
-    },
-
-    "prod": {
-        "test": "aes-256-gcm::sha256::base64::1pCv3GoJQ2ZxiHYSKL77/Q==::KnnAxnjFFVJJf4sYij57Ak+S2SB2MC7FUJ64OjhL0wwgaw==::UOTl35IeueVRVpsBiZrUkQ=="
-    },
-
-    "shared_across_environments": "aes-256-gcm::sha256::base64::VYZleBk6O808v5ucdDh2Dg==::QhhHWfdYJNKU79a8LSASvqhsq305Cs8YiAQ=::FLTn1KA51UARf+Pj4CoYuQ=="
-}
-```
-
-You can override the filename or the starting directory, eg:
-
-```javascript
-const secrets = await enveloper.get_secrets( [ {
-    name: 'test',
-    key: 'this is the key for the test secret'
-}, {
-    name: 'other',
-    key: 'this is the key for the other secret'
-} ], {
-    filename: 'my_envelope.json',
-    directory: '/some/starting/directory'
-} );
 ```
 
 # Contributing
