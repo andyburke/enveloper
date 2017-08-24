@@ -19,15 +19,14 @@ npm install enveloper
 
 ### options
 
-| option             | default        | description                                           |
-| ------------------ | -------------- | ----------------------------------------------------- |
-| key                | auto generated | the key to use for encryption                         |
-| algorithm          | aes-256-gcm    | encryption algorithm to use, which must support an    |
-|                    |                | initialization vector and an auth tag                 |
-| key_hash_algorithm | sha256         | hashing algorithm for the key                         |
-| input_encoding     | utf8           | input encoding of the secret                          |
-| output_encoding    | base64         | output encoding for the encrypted value               |
-| iv                 | auto generated | initialization vector for the encryption algorithm    |
+| option             | default        | description                                                                              |
+| ------------------ | -------------- | ---------------------------------------------------------------------------------------- |
+| key                | auto generated | the key to use for encryption                                                            |
+| algorithm          | aes-256-gcm    | encryption algorithm to use, which must support an initialization vector and an auth tag |
+| key_hash_algorithm | sha256         | hashing algorithm for the key                                                            |
+| input_encoding     | utf8           | input encoding of the secret                                                             |
+| output_encoding    | base64         | output encoding for the encrypted value                                                  |
+| iv                 | auto generated | initialization vector for the encryption algorithm                                       |
 
 ### example
 
