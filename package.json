@@ -1,6 +1,6 @@
 {
   "name": "enveloper",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Easily encrypt/decrypt secrets.",
   "main": "index.js",
   "directories": {
@@ -16,8 +16,8 @@
   "author": "Andy Burke (andy.burke@mailbox.earth)",
   "license": "MIT",
   "dependencies": {
-    "commander": "^2.11.0",
-    "walk-up": "^1.0.2"
+    "walk-up": "^1.0.2",
+    "yargs": "^8.0.2"
   },
   "devDependencies": {
     "tap-spec": "^4.1.1",
