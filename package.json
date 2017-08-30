@@ -1,11 +1,18 @@
 {
   "name": "enveloper",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Easily encrypt/decrypt secrets.",
-  "main": "index.js",
-  "directories": {
-    "bin": "commands/"
+  "homepage": "https://github.com/andyburke/enveloper",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/andyburke/enveloper.git"
   },
+  "bugs": "https://github.com/andyburke/enveloper/issues",
+  "main": "index.js",
+  "bin": "enveloper",
+  "files": [
+    "commands/"
+  ],
   "scripts": {
     "test": "tape test/**/*.js | tap-spec"
   },
@@ -13,7 +20,8 @@
     "encryption",
     "secrets"
   ],
-  "author": "Andy Burke (andy.burke@mailbox.earth)",
+  "author": "Andy Burke <andy.burke@mailbox.earth>",
+  "contributors": [],
   "license": "MIT",
   "dependencies": {
     "walk-up": "^1.0.2",
@@ -22,5 +30,8 @@
   "devDependencies": {
     "tap-spec": "^4.1.1",
     "tape": "^4.8.0"
+  },
+  "engines": {
+    "node": ">=8.0.0"
   }
 }
