@@ -1,6 +1,6 @@
 {
   "name": "enveloper",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "description": "Easily encrypt/decrypt secrets.",
   "homepage": "https://github.com/andyburke/enveloper",
   "repository": {

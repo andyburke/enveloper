@@ -128,7 +128,7 @@ module.exports = {
             const secret_string = ( environment && envelope[ environment ] && envelope[ environment ][ secret.name ] ) || envelope[ secret.name ];
 
             if ( !secret_string ) {
-                throw new Error( `Could not locate secret: ${ secret_name } in ${ envelope_path }` );
+                throw new Error( `Could not locate secret: ${ secret.name } in ${ envelope_path }` );
             }
 
             const encrypted_secret = module.exports.from_string( secret_string );
