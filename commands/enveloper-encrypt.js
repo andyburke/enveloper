@@ -19,7 +19,12 @@ module.exports = {
             input.key = options.key;
         }
 
-        const result = enveloper.seal( options.secret, input );
+        if ( typeof options.secret === 'undefined' ) {
+            throw new Error( 'No secret specified!' );
+        }
+
+        // cast to a string to ensure things like numbers are treated properly
+        const result = enveloper.seal( String( options.secret ), input );
 
         if ( options.json ) {
             console.log( JSON.stringify( result, null, 4 ) );
