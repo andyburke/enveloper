@@ -1,6 +1,6 @@
 {
   "name": "enveloper",
-  "version": "2.0.10",
+  "version": "2.0.11",
   "description": "Easily encrypt/decrypt secrets.",
   "homepage": "https://github.com/andyburke/enveloper",
   "repository": {
@@ -8,7 +8,7 @@
     "url": "https://github.com/andyburke/enveloper.git"
   },
   "bugs": "https://github.com/andyburke/enveloper/issues",
-  "main": "./index.js",
+  "main": "index.js",
   "bin": "./enveloper",
   "files": [
     "commands/",
