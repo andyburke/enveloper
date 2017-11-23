@@ -1,7 +1,7 @@
 'use strict';
 
 const path = require( 'path' );
-const enveloper = require( path.join( __dirname, 'index.js' ) );
+const enveloper = require( path.resolve( path.join( __dirname, '..', 'index.js' ) ) );
 
 module.exports = {
     command: 'decrypt <secret> <key> [--json]',
