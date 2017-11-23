@@ -1,7 +1,6 @@
 'use strict';
 
 const enveloper = require( '../index.js' );
-const pkg = require( '../package.json' );
 
 module.exports = {
     command: 'encrypt <secret> [key] [--json]',
