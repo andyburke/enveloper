@@ -1,6 +1,6 @@
 {
   "name": "enveloper",
-  "version": "2.0.11",
+  "version": "3.0.0",
   "description": "Easily encrypt/decrypt secrets.",
   "homepage": "https://github.com/andyburke/enveloper",
   "repository": {
@@ -12,7 +12,8 @@
   "bin": "./enveloper",
   "files": [
     "commands/",
-    "enveloper"
+    "enveloper",
+    "read_from_stdin.js"
   ],
   "scripts": {
     "test": "tape test/**/*.js | tap-spec"

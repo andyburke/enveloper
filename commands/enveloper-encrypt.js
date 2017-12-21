@@ -1,18 +1,23 @@
 'use strict';
 
 const path = require( 'path' );
+
 const enveloper = require( path.resolve( path.join( __dirname, '..', 'index.js' ) ) );
+const read_from_stdin = require( path.resolve( path.join( __dirname, '..', 'read_from_stdin.js' ) ) );
 
 module.exports = {
-    command: 'encrypt <secret> [key] [--json]',
+    command: 'encrypt [secret] [--key <key>] [--json]',
     builder: {
         json: {
             desc: 'outputs the result in json',
             default: false
+        },
+        key: {
+            desc: 'the encryption key, if not specified, one is generated'
         }
     },
     describe: 'Encrypt the given secret. If no key is specified, a key will be generated.',
-    handler: options => {
+    handler: async options => {
         const input = {};
 
         if ( typeof options.key !== 'undefined' ) {
@@ -20,7 +25,7 @@ module.exports = {
         }
 
         if ( typeof options.secret === 'undefined' ) {
-            throw new Error( 'No secret specified!' );
+            options.secret = await read_from_stdin();
         }
 
         // cast to a string to ensure things like numbers are treated properly
@@ -39,5 +44,6 @@ module.exports = {
             }
         }
 
+        return result;
     }
 };
