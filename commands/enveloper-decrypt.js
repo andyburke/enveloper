@@ -23,8 +23,6 @@ module.exports = {
     },
     describe: 'Decrypt the given secret using the specifed key.',
     handler: async options => {
-        console.dir( options );
-
         try {
             if ( typeof options.secret === 'undefined' ) {
                 options.secret = await read_from_stdin();
