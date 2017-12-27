@@ -1,6 +1,6 @@
 {
   "name": "enveloper",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Easily encrypt/decrypt secrets.",
   "homepage": "https://github.com/andyburke/enveloper",
   "repository": {
@@ -27,7 +27,7 @@
   "license": "MIT",
   "dependencies": {
     "walk-up": "^1.0.2",
-    "yargs": "^8.0.2"
+    "yargs": "^10.0.3"
   },
   "devDependencies": {
     "tap-spec": "^4.1.1",

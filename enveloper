@@ -7,5 +7,16 @@ const yargs = require( 'yargs' );
 yargs
     .commandDir( 'commands' )
     .demandCommand()
+    .fail( ( message, error ) => {
+        if ( error ) {
+            throw error;
+        }
+
+        if ( message ) {
+            console.error( message );
+        }
+
+        process.exit( 1 );
+    } )
     .help()
     .argv;

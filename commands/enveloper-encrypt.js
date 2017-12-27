@@ -7,14 +7,18 @@ const read_from_stdin = require( path.resolve( path.join( __dirname, '..', 'read
 
 module.exports = {
     command: 'encrypt [secret] [--key <key>] [--json]',
-    builder: {
-        json: {
-            desc: 'outputs the result in json',
-            default: false
-        },
-        key: {
-            desc: 'the encryption key, if not specified, one is generated'
-        }
+    builder: yargs => {
+        yargs
+            .positional( 'secret', {
+                desc: 'the secret to encrypt'
+            } )
+            .option( 'key', {
+                desc: 'the encryption key, if not specified, one is generated'
+            } )
+            .option( 'json', {
+                desc: 'outputs the result in json',
+                default: false
+            } );
     },
     describe: 'Encrypt the given secret. If no key is specified, a key will be generated.',
     handler: async options => {
