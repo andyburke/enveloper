@@ -82,14 +82,30 @@ const secrets = await enveloper.get_secrets( [ {
     name: 'test',
     key: 'this is the key for the test secret'
 }, {
-    name: 'other',
-    key: 'this is the key for the other secret'
+    path: 'dot.separated.secret.path',
+    key: 'this is another secret key'
+}, {
+    path: [ 'path', 'array', 'to', 'secret' ],
+    key: 'yet another secret'
 } ] );
 
 // secrets:
 // {
 //     "test": "this is the test secret",
-//     "other": "this is the other secret"
+//     "dot": {
+//         "separated": {
+//             "secret": {
+//                 "path": "this is the secret found using a dot separated path"
+//             }
+//         }
+//     },
+//     "path": {
+//         "array": {
+//             "to": {
+//                 "secret": "this is the secret found using an array path"
+//             }
+//         }
+//     }
 // }
 ```
 

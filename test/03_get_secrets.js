@@ -35,3 +35,37 @@ test( 'get_secrets (NODE_ENV = dev)', async t => {
 
     t.end();
 } );
+
+test( 'get_secrets (dot separated path)', async t => {
+    process.env.NODE_ENV = 'dev';
+
+    const result = await enveloper.get_secrets( [ {
+        path: 'foo.bar',
+        key: 'DdgNyV6JvvwHgIBbaUAfXcCLjsJqG0arKQEaxPOnvPAf9iqluMdBOfURX8r5c1Zz+PN/svAcQl7nUHxG/xMCXA=='
+    } ], {
+        directory: __dirname
+    } );
+
+    t.ok( result, 'got result' );
+    t.ok( result && result.foo && result.foo.bar, 'got nested secret' );
+    t.equal( result && result.foo && result.foo.bar, 'this is an envelope secret in dev', 'test secret is correct' );
+
+    t.end();
+} );
+
+test( 'get_secrets (array path)', async t => {
+    process.env.NODE_ENV = 'dev';
+
+    const result = await enveloper.get_secrets( [ {
+        path: [ 'foo', 'bar' ],
+        key: 'DdgNyV6JvvwHgIBbaUAfXcCLjsJqG0arKQEaxPOnvPAf9iqluMdBOfURX8r5c1Zz+PN/svAcQl7nUHxG/xMCXA=='
+    } ], {
+        directory: __dirname
+    } );
+
+    t.ok( result, 'got result' );
+    t.ok( result && result.foo && result.foo.bar, 'got nested secret' );
+    t.equal( result && result.foo && result.foo.bar, 'this is an envelope secret in dev', 'test secret is correct' );
+
+    t.end();
+} );

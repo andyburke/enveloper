@@ -1,6 +1,10 @@
 {
     "dev": {
-        "test": "aes-256-gcm::sha256::base64::ugsXgVN/3Gag0xI5wVvHjA==::tMsv2lCHhbFhD4NVUJ25Sm+muloURpdJfbM8a47LTQdP::nTY7C5a0u/4BmJwh3XXv0Q=="
+        "test": "aes-256-gcm::sha256::base64::ugsXgVN/3Gag0xI5wVvHjA==::tMsv2lCHhbFhD4NVUJ25Sm+muloURpdJfbM8a47LTQdP::nTY7C5a0u/4BmJwh3XXv0Q==",
+
+        "foo": {
+            "bar": "aes-256-gcm::sha256::base64::ugsXgVN/3Gag0xI5wVvHjA==::tMsv2lCHhbFhD4NVUJ25Sm+muloURpdJfbM8a47LTQdP::nTY7C5a0u/4BmJwh3XXv0Q=="
+        }
     },
 
     "test": "aes-256-gcm::sha256::base64::VYZleBk6O808v5ucdDh2Dg==::QhhHWfdYJNKU79a8LSASvqhsq305Cs8YiAQ=::FLTn1KA51UARf+Pj4CoYuQ=="

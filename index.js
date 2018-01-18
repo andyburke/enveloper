@@ -1,6 +1,8 @@
 'use strict';
 
 const crypto = require( 'crypto' );
+const Delver = require( 'delver' );
+const traverse = require( 'traverse' );
 const util = require( 'util' );
 const find_in_tree = util.promisify( require( 'walk-up' ) );
 
@@ -124,11 +126,21 @@ module.exports = {
         const environment = process.env.NODE_ENV;
 
         const result = {};
+        const env_container = ( environment && envelope[ environment ] ) || envelope;
+
         secrets.forEach( secret => {
-            const secret_string = ( environment && envelope[ environment ] && envelope[ environment ][ secret.name ] ) || envelope[ secret.name ];
+
+            let secret_string = null;
+
+            if ( secret.name ) {
+                secret_string = env_container[ secret.name ];
+            }
+            else if ( secret.path ) {
+                secret_string = typeof secret.path === 'string' ? Delver.get( env_container, secret.path ) : traverse( env_container ).get( secret.path );
+            }
 
             if ( !secret_string ) {
-                throw new Error( `Could not locate secret: ${ secret.name } in ${ envelope_path }` );
+                throw new Error( `Could not locate secret: ${ secret.name || secret.path } in ${ envelope_path }` );
             }
 
             const encrypted_secret = module.exports.from_string( secret_string );
@@ -136,7 +148,17 @@ module.exports = {
                 key: secret.key
             }, encrypted_secret ) );
 
-            result[ secret.name ] = decrypted_secret.decrypted;
+            if ( secret.name ) {
+                result[ secret.name ] = decrypted_secret.decrypted;
+            }
+            else if ( secret.path ) {
+                if ( typeof secret.path === 'string' ) {
+                    Delver.set( result, secret.path, decrypted_secret.decrypted );
+                }
+                else {
+                    traverse( result ).set( secret.path, decrypted_secret.decrypted );
+                }
+            }
         } );
 
         return result;
