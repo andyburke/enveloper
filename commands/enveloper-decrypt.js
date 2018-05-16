@@ -15,6 +15,9 @@ module.exports = {
             .option( 'key', {
                  desc: 'the decryption key'
             } )
+            .option( 'keyvar', {
+                desc: 'the name of an environment variable containing the key to use'
+            } )
             .option( 'json', {
                 desc: 'outputs the result in json',
                 default: false
@@ -23,25 +26,25 @@ module.exports = {
     },
     describe: 'Decrypt the given secret using the specifed key.',
     handler: async options => {
-        try {
-            if ( typeof options.secret === 'undefined' ) {
-                options.secret = await read_from_stdin();
-            }
+        if ( typeof options.secret === 'undefined' ) {
+            options.secret = await read_from_stdin();
+        }
 
-            const encrypted_info = enveloper.from_string( options.secret );
+        const encrypted_info = enveloper.from_string( options.secret );
+
+        if ( typeof options.key !== 'undefined' ) {
             encrypted_info.key = options.key;
-
-            const result = enveloper.open( encrypted_info );
-
-            if ( options.json ) {
-                console.log( JSON.stringify( result, null, 4 ) );
-            }
-            else {
-                console.log( result.decrypted );
-            }
         }
-        catch( ex ) {
-            console.error( ex );
+        else if ( typeof options.keyvar !== 'undefined' ) {
+            encrypted_info.key = process.env[ options.keyvar ];
         }
+        else {
+            console.error( 'You must specify a decryption key using either --key or --keyvar!' );
+            process.exit( 1 );
+        }
+
+        const result = enveloper.open( encrypted_info );
+
+        console.log( options.json ? JSON.stringify( result, null, 4 ) : result.decrypted );
     }
 };

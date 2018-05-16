@@ -1,6 +1,6 @@
 {
   "name": "enveloper",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "description": "Easily encrypt/decrypt secrets.",
   "homepage": "https://github.com/andyburke/enveloper",
   "repository": {
@@ -27,6 +27,8 @@
   "license": "MIT",
   "dependencies": {
     "delver": "^1.1.2",
+    "detect-indent": "^5.0.0",
+    "dotenv": "^5.0.1",
     "traverse": "^0.6.6",
     "walk-up": "^1.0.2",
     "yargs": "^10.1.1"

@@ -1,12 +1,13 @@
 'use strict';
 
+require( 'dotenv' ).config();
 const path = require( 'path' );
 
 const enveloper = require( path.resolve( path.join( __dirname, '..', 'index.js' ) ) );
 const read_from_stdin = require( path.resolve( path.join( __dirname, '..', 'read_from_stdin.js' ) ) );
 
 module.exports = {
-    command: 'encrypt [secret] [--key <key>] [--json]',
+    command: 'encrypt [secret] [--key <key>] [--keyvar <environment variable>] [--json]',
     builder: yargs => {
         yargs
             .positional( 'secret', {
@@ -14,6 +15,9 @@ module.exports = {
             } )
             .option( 'key', {
                 desc: 'the encryption key, if not specified, one is generated'
+            } )
+            .option( 'keyvar', {
+                desc: 'the name of an environment variable containing the key to use'
             } )
             .option( 'json', {
                 desc: 'outputs the result in json',
@@ -26,6 +30,9 @@ module.exports = {
 
         if ( typeof options.key !== 'undefined' ) {
             input.key = options.key;
+        }
+        else if ( typeof options.keyvar !== 'undefined' ) {
+            input.key = process.env[ options.keyvar ];
         }
 
         if ( typeof options.secret === 'undefined' ) {
