@@ -4,8 +4,8 @@ module.exports = () => {
     let buf = '';
     return new Promise( resolve => {
         process.stdin.on( 'readable', () => {
-            const chunk = process.stdin.read();
-            if ( chunk !== null ) {
+            let chunk;
+            while( chunk = process.stdin.read() ) {
                 buf += chunk;
             }
         } );
