@@ -1,6 +1,7 @@
 'use strict';
 
 const crypto = require( 'crypto' );
+const extend = require( 'extend' );
 const Delver = require( 'delver' );
 const traverse = require( 'traverse' );
 const util = require( 'util' );
@@ -24,7 +25,7 @@ const DEFAULTS = {
 
 module.exports = {
     seal: function( secret, _options ) {
-        const options = Object.assign( {
+        const options = extend( true, {
             key: crypto.randomBytes( 64 ).toString( 'base64' ),
             algorithm: DEFAULTS.ALGORITHM,
             key_hash_algorithm: DEFAULTS.KEY_HASH_ALGORITHM,
@@ -37,14 +38,14 @@ module.exports = {
         const cipher = crypto.createCipheriv( options.algorithm, hashed_key, options.iv );
         const encrypted = cipher.update( secret, options.input_encoding, options.output_encoding ) + cipher.final( options.output_encoding );
         const tag = cipher.getAuthTag().toString( 'base64' );
-        return Object.assign( {
-            encrypted: encrypted,
+        return extend( true, {
+            encrypted,
             tag: tag
         }, options );
     },
 
     open: function( _options ) {
-        const options = Object.assign( {
+        const options = extend( true, {
             algorithm: DEFAULTS.ALGORITHM,
             key_hash_algorithm: DEFAULTS.KEY_HASH_ALGORITHM,
             input_encoding: DEFAULTS.INPUT_ENCODING,
@@ -56,13 +57,13 @@ module.exports = {
         decipher.setAuthTag( Buffer.from( options.tag, 'base64' ) );
 
         const decrypted = decipher.update( options.encrypted, options.output_encoding, options.input_encoding ) + decipher.final( options.input_encoding );
-        return Object.assign( {
-            decrypted: decrypted
+        return extend( true, {
+            decrypted
         }, options );
     },
 
     to_string: function( _options ) {
-        const options = Object.assign( {
+        const options = extend( true, {
             separator: DEFAULTS.SEPARATOR,
             encoding_fields: DEFAULTS.STRING_ENCODING_FIELDS
         }, _options );
@@ -80,7 +81,7 @@ module.exports = {
     },
 
     from_string: function( input, _options ) {
-        const options = Object.assign( {
+        const options = extend( true, {
             separator: DEFAULTS.SEPARATOR,
             encoding_fields: DEFAULTS.STRING_ENCODING_FIELDS
         }, _options );
@@ -91,7 +92,7 @@ module.exports = {
             throw new Error( `Could not parse input string.` );
         }
 
-        const encrypted_info = Object.assign( {}, options );
+        const encrypted_info = extend( true, {}, options );
 
         options.encoding_fields.forEach( ( field, index ) => {
             encrypted_info[ field ] = values[ index ];
@@ -103,8 +104,11 @@ module.exports = {
         return encrypted_info;
     },
 
-    get_secrets: async function( secrets, _options ) {
-        const options = Object.assign( {
+    get: async function( _options ) {
+        const options = extend( true, {
+            secrets: [],
+            key: null,
+            path: null,
             filename: 'envelope.json',
             directory: __dirname
         }, _options );
@@ -128,39 +132,70 @@ module.exports = {
         const result = {};
         const env_container = ( environment && envelope[ environment ] ) || envelope;
 
-        secrets.forEach( secret => {
+        options.secrets.forEach( secret => {
 
+            let secret_spec_type = Array.isArray( secret ) ? 'array' : typeof secret;
             let secret_string = null;
 
-            if ( secret.name ) {
-                secret_string = env_container[ secret.name ];
-            }
-            else if ( secret.path ) {
-                secret_string = typeof secret.path === 'string' ? Delver.get( env_container, secret.path ) : traverse( env_container ).get( secret.path );
+            switch( secret_spec_type ) {
+                case 'array':
+                    secret_string = traverse( env_container ).get( secret );
+                    break;
+                case 'string':
+                    secret_string = Delver.get( env_container, secret );
+                    break;
+                case 'object':
+                    if ( secret.name ) {
+                        secret_string = env_container[ secret.name ];
+                    }
+                    else if ( secret.path ) {
+                        secret_string = typeof secret.path === 'string' ? Delver.get( env_container, secret.path ) : traverse( env_container ).get( secret.path );
+                    }
+                    break;
+                default:
+                    throw new Error( `Unknown secret spec type: ${ secret_spec_type }` );
             }
 
             if ( !secret_string ) {
                 throw new Error( `Could not locate secret: ${ secret.name || secret.path } in ${ envelope_path }` );
             }
 
+            const key = secret.key || options.key;
+
             const encrypted_secret = module.exports.from_string( secret_string );
-            const decrypted_secret = module.exports.open( Object.assign( {
-                key: secret.key
+            const decrypted_secret = module.exports.open( extend( true, {
+                key
             }, encrypted_secret ) );
 
-            if ( secret.name ) {
-                result[ secret.name ] = decrypted_secret.decrypted;
-            }
-            else if ( secret.path ) {
-                if ( typeof secret.path === 'string' ) {
-                    Delver.set( result, secret.path, decrypted_secret.decrypted );
-                }
-                else {
-                    traverse( result ).set( secret.path, decrypted_secret.decrypted );
-                }
+            switch( secret_spec_type ) {
+                case 'array':
+                    traverse( result ).set( secret, decrypted_secret.decrypted );
+                    break;
+                case 'string':
+                    Delver.set( result, secret, decrypted_secret.decrypted );
+                    break;
+                case 'object':
+                    if ( secret.name ) {
+                        result[ secret.name ] = decrypted_secret.decrypted;
+                    }
+                    else if ( secret.path ) {
+                        if ( typeof secret.path === 'string' ) {
+                            Delver.set( result, secret.path, decrypted_secret.decrypted );
+                        }
+                        else {
+                            traverse( result ).set( secret.path, decrypted_secret.decrypted );
+                        }
+                    }
+                    break;
             }
         } );
 
         return result;
+    },
+
+    get_secrets: async function( secrets, _options ) {
+        return this.get( extend( true, {
+            secrets
+        }, _options ) );
     }
 };

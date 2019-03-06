@@ -5,6 +5,8 @@ const test = require( 'tape' );
 const enveloper = require( '../index.js' );
 
 test( 'get_secrets (no environment)', async t => {
+    process.env.NODE_ENV = undefined;
+
     const result = await enveloper.get_secrets( [ {
         name: 'test',
         key: 'vVs0hBd1eXF860XYNg3LV4TOzML7WqTiaGViCoPX31acN2860dHY0VNyPopYKq340NzlFSjbMrK8jBbxpnR28g=='

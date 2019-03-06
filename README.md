@@ -7,7 +7,7 @@ enveloper is a small, simple utility to encrypt secrets.
 
 # Installation
 
-```
+```bash
 npm install enveloper
 ```
 
@@ -15,14 +15,14 @@ npm install enveloper
 
 Encrypt a value using a secret key:
 
-```
+```bash
 > enveloper encrypt "this is a secret" --key "this is the secret key"
 aes-256-gcm::sha256::base64::DYMNOOor7pRJduKneKn9dw==::MDZZYhhep3HSN9lkIXh+HQ==::l9KDBsxf6apQK501wADJgQ==
 ```
 
 Set a secret into an envelope.json in your project:
 
-```
+```bash
 > enveloper set my.secret "this is a secret" --key "this is the secret key"
 > cat envelope.json
 {
@@ -34,7 +34,7 @@ Set a secret into an envelope.json in your project:
 
 Encrypt another secret for your dev environment:
 
-```
+```bash
 > enveloper set dev.my.secret "this is a secret for the dev environment" --key "this is the secret key for dev"
 > cat envelope.json
 {
@@ -52,7 +52,7 @@ Encrypt another secret for your dev environment:
 
 Read a secret from your envelope.json via the command line:
 
-```
+```bash
 > enveloper get my.secret --key "this is the secret key"
 this is a secret
 ```
@@ -62,56 +62,58 @@ Get the secrets back out via the API (assuming NODE_ENV is 'dev' and we put our 
 ```javascript
 const enveloper = require( 'enveloper' );
 
-const secrets = await enveloper.get_secrets( [ {
-    path: 'my.secret',
+const secrets = await enveloper.get( {
+    secrets: [
+        'my.secret',
+        'my.deeper.secret'
+    ],
     key: process.env.ENVIRONMENT_SECRET_KEY
-} ] );
+} );
 
 // secrets:
 // {
 //     "my": {
-//         "secret": "this is a secret for the dev environment"
+//         "secret": "this is a secret for the dev environment",
+//         "deeper": {
+//             "secret": "foo"
+//         }
 //     }
 // }
 ```
 
 # API
 
-## get_secrets( secrets[, options ] )
+## get( { secrets: <mixed array of strings, path arrays, objects>[, key: <secret key for this set of secrets> ] } )
 
-gets the given secrets from a file within the directory tree
+gets the given set of secrets
 
 ### example
 
 ```javascript
 const enveloper = require( 'enveloper' );
 
-const secrets = await enveloper.get_secrets( [ {
-    name: 'test',
-    key: 'this is the key for the test secret'
-}, {
-    path: 'dot.separated.secret.path',
-    key: 'this is another secret key'
-}, {
-    path: [ 'path', 'array', 'to', 'secret' ],
-    key: 'yet another secret'
-} ] );
+const secrets = await enveloper.get( {
+    secrets: [
+        'test',
+        'foo.bar.baz', // nested secret with dot notation
+        [ 'foo', 'bar', 'yak' ], // nested secret in array notation
+        { path: 'foo.another', key: 'separate key for foo.another' }, // object secret with associated key
+        { path: 'foo.yet.another' } // object secret, equivalent to a string/array secret
+    ],
+    key: 'this is the key for most of the secrets'
+} );
 
 // secrets:
 // {
 //     "test": "this is the test secret",
-//     "dot": {
-//         "separated": {
-//             "secret": {
-//                 "path": "this is the secret found using a dot separated path"
-//             }
-//         }
-//     },
-//     "path": {
-//         "array": {
-//             "to": {
-//                 "secret": "this is the secret found using an array path"
-//             }
+//     "foo": {
+//         "bar": {
+//             "baz": "hi!",
+//             "yak": "I'll eat anything!"
+//         },
+//         "another": "another secret in foo!",
+//         "yet": {
+//             "another": "yet another secret, deeper in foo!"
 //         }
 //     }
 // }
@@ -119,7 +121,7 @@ const secrets = await enveloper.get_secrets( [ {
 
 ### envelope.json
 
-By default, get_secrets will search up the directory tree for an envelope.json
+By default, .get() will search up the directory tree for an envelope.json
 
 The envelope.json file should contain string-based enveloper secrets, which can
 optionally be put into environments, eg:
@@ -145,13 +147,12 @@ optionally be put into environments, eg:
 You can override the filename or the starting directory, eg:
 
 ```javascript
-const secrets = await enveloper.get_secrets( [ {
-    name: 'test',
-    key: 'this is the key for the test secret'
-}, {
-    name: 'other',
-    key: 'this is the key for the other secret'
-} ], {
+const secrets = await enveloper.get( {
+    secrets: [
+        'test',
+        'other'
+    ]
+    key: 'this is the key for the test secret',
     filename: 'my_envelope.json',
     directory: '/some/starting/directory'
 } );
