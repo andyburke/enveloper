@@ -26,17 +26,17 @@
   "contributors": [],
   "license": "MIT",
   "dependencies": {
-    "delver": "^1.1.4",
-    "detect-indent": "^5.0.0",
-    "dotenv": "^6.2.0",
+    "delver": "^1.1.5",
+    "detect-indent": "^6.0.0",
+    "dotenv": "^8.1.0",
     "extend": "^3.0.2",
     "traverse": "^0.6.6",
     "walk-up": "^1.0.2",
-    "yargs": "^13.2.1"
+    "yargs": "^14.0.0"
   },
   "devDependencies": {
     "tap-spec": "^5.0.0",
-    "tape": "^4.10.1"
+    "tape": "^4.11.0"
   },
   "engines": {
     "node": ">=8.0.0"
