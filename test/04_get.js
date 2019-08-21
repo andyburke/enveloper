@@ -11,6 +11,9 @@ test( 'get (no environment)', async t => {
         secrets: [ {
             name: 'test',
             key: 'vVs0hBd1eXF860XYNg3LV4TOzML7WqTiaGViCoPX31acN2860dHY0VNyPopYKq340NzlFSjbMrK8jBbxpnR28g=='
+        }, {
+            name: 'no_environment',
+            key: 'vVs0hBd1eXF860XYNg3LV4TOzML7WqTiaGViCoPX31acN2860dHY0VNyPopYKq340NzlFSjbMrK8jBbxpnR28g=='
         } ],
         directory: __dirname
     } );
@@ -18,6 +21,8 @@ test( 'get (no environment)', async t => {
     t.ok( result, 'got result' );
     t.ok( result && result.test, 'got test secret' );
     t.equal( result && result.test, 'this is an envelope secret', 'test secret is correct' );
+    t.ok( result && result.no_environment, 'got no_environment secret' );
+    t.equal( result && result.no_environment, 'this is an envelope secret', 'no_environment secret is correct' );
 
     t.end();
 } );
@@ -29,6 +34,9 @@ test( 'get (NODE_ENV = dev)', async t => {
         secrets: [ {
             name: 'test',
             key: 'DdgNyV6JvvwHgIBbaUAfXcCLjsJqG0arKQEaxPOnvPAf9iqluMdBOfURX8r5c1Zz+PN/svAcQl7nUHxG/xMCXA=='
+        }, {
+            name: 'no_environment',
+            key: 'vVs0hBd1eXF860XYNg3LV4TOzML7WqTiaGViCoPX31acN2860dHY0VNyPopYKq340NzlFSjbMrK8jBbxpnR28g=='
         } ],
         directory: __dirname
     } );
@@ -36,6 +44,8 @@ test( 'get (NODE_ENV = dev)', async t => {
     t.ok( result, 'got result' );
     t.ok( result && result.test, 'got test secret' );
     t.equal( result && result.test, 'this is an envelope secret in dev', 'test secret is correct' );
+    t.ok( result && result.no_environment, 'got no_environment secret' );
+    t.equal( result && result.no_environment, 'this is an envelope secret', 'no_environment secret is correct' );
 
     t.end();
 } );

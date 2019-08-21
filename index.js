@@ -130,7 +130,9 @@ module.exports = {
         const environment = process.env.NODE_ENV;
 
         const result = {};
-        const env_container = ( environment && envelope[ environment ] ) || envelope;
+
+        // allow for envrinment-specific things to override less environment-specific things
+        const env_container = extend( true, {}, envelope, ( environment && envelope[ environment ] ) );
 
         options.secrets.forEach( secret => {
 
