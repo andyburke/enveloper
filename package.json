@@ -1,44 +1,46 @@
 {
-  "name": "enveloper",
-  "version": "3.3.2",
-  "description": "Easily encrypt/decrypt secrets.",
-  "homepage": "https://github.com/andyburke/enveloper",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/andyburke/enveloper.git"
-  },
-  "bugs": "https://github.com/andyburke/enveloper/issues",
-  "main": "index.js",
-  "bin": "./enveloper",
-  "files": [
-    "commands/",
-    "enveloper",
-    "read_from_stdin.js"
-  ],
-  "scripts": {
-    "test": "tape test/**/*.js | tap-spec"
-  },
-  "keywords": [
-    "encryption",
-    "secrets"
-  ],
-  "author": "Andy Burke <andy.burke@mailbox.earth>",
-  "contributors": [],
-  "license": "MIT",
-  "dependencies": {
-    "delver": "^1.1.5",
-    "detect-indent": "^6.0.0",
-    "dotenv": "^8.1.0",
-    "extend": "^3.0.2",
-    "traverse": "^0.6.6",
-    "walk-up": "^1.0.2",
-    "yargs": "^14.0.0"
-  },
-  "devDependencies": {
-    "tap-spec": "^5.0.0",
-    "tape": "^4.11.0"
-  },
-  "engines": {
-    "node": ">=8.0.0"
-  }
+	"name": "enveloper",
+	"version": "3.4.0",
+	"description": "Easily encrypt/decrypt secrets.",
+	"homepage": "https://github.com/andyburke/enveloper",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/andyburke/enveloper.git"
+	},
+	"bugs": "https://github.com/andyburke/enveloper/issues",
+	"main": "index.js",
+	"bin": "./enveloper",
+	"files": [
+		"commands/",
+		"enveloper",
+		"read_from_stdin.js"
+	],
+	"scripts": {
+		"test": "tape test/**/*.js | tap-spec"
+	},
+	"keywords": [
+		"encryption",
+		"secrets"
+	],
+	"author": "Andy Burke <andy.burke@mailbox.earth>",
+	"contributors": [],
+	"license": "MIT",
+	"dependencies": {
+		"deepmerge": "^4.2.2",
+		"delver": "^1.1.5",
+		"detect-indent": "^6.0.0",
+		"dotenv": "^8.2.0",
+		"extend": "^3.0.2",
+		"traverse": "^0.6.6",
+		"walk-up": "^1.0.2",
+		"yargs": "^16.2.0"
+	},
+	"devDependencies": {
+		"eslint": "^7.23.0",
+		"tap-spec": "^5.0.0",
+		"tape": "^5.2.2"
+	},
+	"engines": {
+		"node": ">=8.0.0"
+	}
 }
